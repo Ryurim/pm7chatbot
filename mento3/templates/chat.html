@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대화하기 - {{ situation }}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">{{ disaster }} - {{ situation }}</h1>
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md">
+            <div id="chat-messages" class="p-4 h-96 overflow-y-auto">
+                <div class="mb-4">
+                    <div class="bg-blue-100 p-3 rounded-lg inline-block">
+                        안녕하세요! 저는 재난 상황에서 도움을 드릴 수 있는 챗봇입니다. 
+                        현재 상황에서 어떻게 행동해야 할지 물어보세요.
+                    </div>
+                </div>
+            </div>
+            <div class="border-t p-4">
+                <form id="chat-form" class="flex gap-2">
+                    <input type="text" id="user-input" 
+                           class="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                           placeholder="메시지를 입력하세요...">
+                    <button type="submit" 
+                            class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+                        전송
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="text-center mt-8">
+            <a href="/scenario/{{ disaster }}" class="text-blue-500 hover:text-blue-700">← 다른 상황 선택하기</a>
+        </div>
+    </div>
+    <script>
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+        const chatMessages = document.getElementById('chat-messages');
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // 사용자 메시지 표시
+            appendMessage(message, 'user');
+            userInput.value = '';
+
+            try {
+                const response = await fetch('/get_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
+                const data = await response.json();
+                appendMessage(data.response, 'bot');
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage('죄송합니다. 오류가 발생했습니다.', 'bot');
+            }
+        });
+
+        function appendMessage(message, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'mb-4';
+            
+            const bubble = document.createElement('div');
+            bubble.className = sender === 'user' 
+                ? 'bg-green-100 p-3 rounded-lg inline-block ml-auto'
+                : 'bg-blue-100 p-3 rounded-lg inline-block';
+            bubble.textContent = message;
+            
+            messageDiv.appendChild(bubble);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    </script>
+</body>
+</html>
