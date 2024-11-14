@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>모두의 교실</title>
     <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/chatbot.css" />
+
+    <link rel="stylesheet" type="text/css" href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css'>
+
 </head>
 <body>
     <div class="container">
         <div class="outline">
-            <div class="box1 flex_between">
+            <div class="statusBar flex_between">
                 <div id="clock"></div>
                 <div class="flex bar">
                     <div><i class="fa-solid fa-signal"></i></div>
@@ -17,76 +21,85 @@
                     <div><i class="fa-solid fa-battery-full"></i></div>
                 </div>
             </div>
-            <div class="box2">
 
+            <div>
+                <img class="homeImg" src="/static/image/home_모두의교실.png" alt="모두의 교실">
             </div>
-            <div class="box3">
-                <div class="box4 flex_between">
+
+            <div>
+                <p class="subhead">오늘의 교실 선택하기</p>
+            </div>
+
+            <div class="menuBox">
+                <div class="menuLst flex_between">
                     <div class="menu">
                         <button class="menuBtn" onclick="window.location.href='/main'">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
-                            <h4 class="menuText">안전 · 건강 교육</h4>
+                            <img class="menuImg" src="/static/image/home_1_안전 건강 교육.png" alt="안전 · 건강 교육">
+                            <h4 class="menuText">안전·건강 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
+                            <img class="menuImg" src="/static/image/home_2_인성교육.png" alt="인성 교육">
                             <h4 class="menuText">인성 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
+                            <img class="menuImg" src="/static/image/home_3_진로교육.png" alt="진로 교육">
                             <h4 class="menuText">진로 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
+                            <img class="menuImg" src="/static/image/home_4_민주 시민 교육.png" alt="민주 시민 교육">
                             <h4 class="menuText">민주 시민 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
+                            <img class="menuImg" src="/static/image/home_5_인권 교육.png" alt="인권 교육">
                             <h4 class="menuText">인권 교육</h4>
                         </button>
                     </div>
                 </div>
-                <div class="box4 flex_between">
+                <div class="menuLst flex_between">
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
+                            <img class="menuImg" src="/static/image/home_6_다문화 교육.png" alt="다문화 교육">
                             <h4 class="menuText">다문화 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
+                            <img class="menuImg" src="/static/image/home_7_통일 교육.png" alt="통일 교육">
                             <h4 class="menuText">통일 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
+                            <img class="menuImg" src="/static/image/home_8_독도 교육.png" alt="독도 교육">
                             <h4 class="menuText">독도 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
-                            <h4 class="menuText">경제 · 금융 교육</h4>
+                            <img class="menuImg" src="/static/image/home_9_경제 금융 교육.png" alt="경제 · 금융 교육">
+                            <h4 class="menuText">경제·금융 교육</h4>
                         </button>
                     </div>
                     <div class="menu">
                         <button class="menuBtn">
-                            <img class="menuImg" src="/static/image/top_3.png" alt="">
-                            <h4 class="menuText">환경 · 지속 가능발전 교육</h4>
+                            <img class="menuImg" src="/static/image/home_10_환경 지속 가능 발전 교육.png" alt="">
+                            <h4 class="menuText">환경·지속가능 발전 교육</h4>
                         </button>
                     </div>
                 </div>
             </div>
-
+            <div class="column bottomBox">
+                <p class="bottomTxt">AI 챗봇과 함께 배우는 쉽고 재미있는 범교과 학습!</p>
+                <p class="bottomTxt">2022년 개정 교육과정 기준</p>
+            </div>
         </div>
             
     </div>

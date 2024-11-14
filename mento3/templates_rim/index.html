@@ -1,0 +1,147 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>모두의 교실</title>
+        <link rel="stylesheet" href="/static/main.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="outline">
+                <div id="clockBar" class="flex_between box1">
+                    <div id="clock"></div>
+                    <div id="bar" class="bar flex">
+                        <i class="fa-solid fa-signal"></i>
+                        <i class="fa-solid fa-wifi"></i>
+                        <i class="fa-solid fa-battery-three-quarters"></i>
+                    </div>
+                </div>
+                <div class="box2">
+                    <div class="flex indexBox2" onclick="window.location.href='/'">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <h3>안전 · 건강교육</h3>
+                    </div>
+                    <div>
+                        <img src="/static/image/index_chatbot.png" />
+                    </div>
+                </div>
+                <div class="box3 indexBox3">
+                    <button class="disasterBtn" onclick="window.location.href='/situation'">
+                        <img src="/static/image/지진.png" alt="" /> 지진
+                    </button>
+                    <button class="disasterBtn"><img src="/static/image/화재.png" alt="" />화재</button>
+                    <button class="disasterBtn"><img src="/static/image/태풍.png" alt="" />태풍·집중호우</button>
+                    <button class="disasterBtn"><img src="/static/image/황사.png" alt="" />황사·미세먼지</button>
+                    <button class="disasterBtn"><img src="/static/image/폭염.png" alt="" />폭염</button>
+                    <button class="disasterBtn"><img src="/static/image/폭설.png" alt="" />대설·한파</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let currentDisaster = "";
+            let currentSituation = "";
+
+            async function startDisaster(disaster) {
+                if (disaster === "지진") {
+                    document.getElementById("disaster-selection").style.display = "none";
+                    document.getElementById("zizin").style.display = "block";
+                }
+            }
+
+            async function startScenario(disaster, currentSituation1) {
+                currentDisaster = disaster;
+                // 첫 상황을 '고층 건물 안에 있는 상황'으로 설정
+                currentSituation = currentSituation1;
+                await loadSituation(currentDisaster, currentSituation);
+
+                document.getElementById("disaster-selection").style.display = "none";
+                document.getElementById("scenario-section").style.display = "block";
+            }
+
+            async function loadSituation(disaster, situation) {
+                const response = await fetch(`/scenario/${disaster}/${situation}`);
+                const data = await response.json();
+
+                document.getElementById("situation-title").textContent = situation;
+                const questionsDiv = document.getElementById("questions");
+                questionsDiv.innerHTML = "";
+
+                data.questions.forEach((question, index) => {
+                    const button = document.createElement("button");
+                    button.textContent = question.text;
+                    button.onclick = () => checkAnswer(index);
+                    questionsDiv.appendChild(button);
+                });
+
+                document.getElementById("feedback").style.display = "none";
+                document.getElementById("chat-section").style.display = "none";
+            }
+
+            async function checkAnswer(answerIndex) {
+                const response = await fetch("/check_answer", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        disaster: currentDisaster,
+                        situation: currentSituation,
+                        answer_index: answerIndex,
+                    }),
+                });
+                const data = await response.json();
+
+                const feedback = document.getElementById("feedback");
+                const feedbackText = document.getElementById("feedback-text");
+                const continueBtn = document.getElementById("continue-btn");
+
+                feedbackText.textContent = data.feedback;
+                feedback.style.display = "block";
+
+                if (data.is_correct === "question") {
+                    document.getElementById("chat-section").style.display = "block";
+                    continueBtn.style.display = "none";
+                } else if (data.next_situation) {
+                    continueBtn.style.display = "block";
+                    currentSituation = data.next_situation;
+                } else {
+                    continueBtn.style.display = "block";
+                }
+            }
+
+            async function sendMessage() {
+                const userInput = document.getElementById("user-input");
+                const message = userInput.value.trim();
+                if (!message) return;
+
+                const chatHistory = document.getElementById("chat-history");
+                const userMessage = document.createElement("div");
+                userMessage.className = "user-message";
+                userMessage.textContent = message;
+                chatHistory.appendChild(userMessage);
+
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message: message }),
+                });
+                const data = await response.json();
+
+                const botMessage = document.createElement("div");
+                botMessage.className = "bot-message";
+                botMessage.textContent = data.response;
+                chatHistory.appendChild(botMessage);
+
+                userInput.value = "";
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }
+        </script>
+        <script src="/static/home.js"></script>
+        <script src="https://kit.fontawesome.com/be97bd8e1b.js" crossorigin="anonymous"></script>
+    </body>
+</html>

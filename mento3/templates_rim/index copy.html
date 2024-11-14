@@ -1,0 +1,160 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>재난 대응 가이드</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>재난 대응 가이드</h1>
+            </header>
+
+            <!-- 재난 상황 선택 -->
+            <div id="disaster-selection" class="section">
+                <h2>재난 상황 선택</h2>
+                <div class="disaster-buttons">
+                    {% for disaster in disasters %}
+                    <button onclick="startDisaster('{{ disaster }}')">{{ disaster }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- 상황2 선택 -->
+            <div id="zizin" style="display: none">
+                <h2>지진의 상황2 선택</h2>
+                <div id="questions2" class="questions-container"></div>
+                <div id="feedback2" class="feedback">
+                    <button onclick="startScenario('지진', '고층 건물 안에 있는 상황')">
+                        고층 건물 안에 있는 상황
+                    </button>
+                    <button onclick="startScenario('지진', '대피로 확인하기')">대피로 확인하기</button>
+                </div>
+            </div>
+
+            <!-- 시나리오 표시 -->
+            <div id="scenario-section" class="section" style="display: none">
+                <h2 id="situation-title"></h2>
+                <div id="questions" class="questions-container"></div>
+                <div id="feedback" class="feedback" style="display: none">
+                    <p id="feedback-text"></p>
+                    <button id="continue-btn" onclick="continueSituation()" style="display: none">다음 상황으로</button>
+                </div>
+            </div>
+
+            <!-- 챗봇 섹션 -->
+            <div id="chat-section" class="section" style="display: none">
+                <h2>AI 챗봇에게 질문하기</h2>
+                <div id="chat-history" class="chat-history"></div>
+                <div class="chat-input">
+                    <input type="text" id="user-input" placeholder="질문을 입력하세요..." />
+                    <button onclick="sendMessage()">전송</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let currentDisaster = "";
+            let currentSituation = "";
+
+            async function startDisaster(disaster) {
+                if (disaster === "지진") {
+                    document.getElementById("disaster-selection").style.display = "none";
+                    document.getElementById("zizin").style.display = "block";
+                }
+            }
+
+            async function startScenario(disaster, currentSituation1) {
+                currentDisaster = disaster;
+                // 첫 상황을 '고층 건물 안에 있는 상황'으로 설정
+                currentSituation = currentSituation1;
+                await loadSituation(currentDisaster, currentSituation);
+
+                document.getElementById("disaster-selection").style.display = "none";
+                document.getElementById("scenario-section").style.display = "block";
+            }
+
+            async function loadSituation(disaster, situation) {
+                const response = await fetch(`/scenario/${disaster}/${situation}`);
+                const data = await response.json();
+
+                document.getElementById("situation-title").textContent = situation;
+                const questionsDiv = document.getElementById("questions");
+                questionsDiv.innerHTML = "";
+
+                data.questions.forEach((question, index) => {
+                    const button = document.createElement("button");
+                    button.textContent = question.text;
+                    button.onclick = () => checkAnswer(index);
+                    questionsDiv.appendChild(button);
+                });
+
+                document.getElementById("feedback").style.display = "none";
+                document.getElementById("chat-section").style.display = "none";
+            }
+
+            async function checkAnswer(answerIndex) {
+                const response = await fetch("/check_answer", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        disaster: currentDisaster,
+                        situation: currentSituation,
+                        answer_index: answerIndex,
+                    }),
+                });
+                const data = await response.json();
+
+                const feedback = document.getElementById("feedback");
+                const feedbackText = document.getElementById("feedback-text");
+                const continueBtn = document.getElementById("continue-btn");
+
+                feedbackText.textContent = data.feedback;
+                feedback.style.display = "block";
+
+                if (data.is_correct === "question") {
+                    document.getElementById("chat-section").style.display = "block";
+                    continueBtn.style.display = "none";
+                } else if (data.next_situation) {
+                    continueBtn.style.display = "block";
+                    currentSituation = data.next_situation;
+                } else {
+                    continueBtn.style.display = "block";
+                }
+            }
+
+            async function sendMessage() {
+                const userInput = document.getElementById("user-input");
+                const message = userInput.value.trim();
+                if (!message) return;
+
+                const chatHistory = document.getElementById("chat-history");
+                const userMessage = document.createElement("div");
+                userMessage.className = "user-message";
+                userMessage.textContent = message;
+                chatHistory.appendChild(userMessage);
+
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message: message }),
+                });
+                const data = await response.json();
+
+                const botMessage = document.createElement("div");
+                botMessage.className = "bot-message";
+                botMessage.textContent = data.response;
+                chatHistory.appendChild(botMessage);
+
+                userInput.value = "";
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }
+        </script>
+    </body>
+</html>

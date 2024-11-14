@@ -18,7 +18,6 @@
 
 .flex_column{
     display: flex;
-    align-items: center;
     flex-direction: column;
     justify-content: space-between;
 }
@@ -46,41 +45,248 @@
     flex-direction: row;
 }
 
-.box1{
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.statusBar{
+    height: 32px;
     padding: 0 20px;
 }
 
-.box2{
-    height: 302px;
-}
-
-.box2_1{
+.appBar{
     height: 42px;
 }
 
-.box3{
+.homeImg{
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.topImg{
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0px;
+}
+
+.mainCont{
+    padding-top: 74px;
+}
+
+
+.boxInfo{
+    width: 344px;
+    height: 64px;
+    background-color: rgb(255, 231, 207);
+}
+
+.boxChip{
+    padding: 0px 30px
+}
+.chip{
+    width: 72px;
+    height: 28px;
+    border: 2px solid rgb(182, 182, 182);
+    border-radius: 32px;
+    padding: 0;
+    font-weight: 600;
+    color: rgb(156, 156, 156);
+    cursor: pointer;
+}
+.chip:hover{
+    border: 2px solid rgb(68, 143, 235);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2); /* 위쪽에만 그림자 */
+    font-weight: 600;
+    color: rgb(68, 143, 235)
+}
+.chip:active{
+    background-color: rgb(68, 143, 235);
+    border: 2px solid rgb(68, 143, 235);
+    padding: 0;
+    cursor: pointer;
+    font-weight: 600;
+    color: white;
+}
+.chipOn{
+    width: 72px;
+    height: 28px;
+    background-color: rgb(68, 143, 235);
+    border: 2px solid rgb(68, 143, 235);
+    border-radius: 32px;
+    padding: 0;
+    cursor: pointer;
+    font-weight: 600;
+    color: white;
+}
+
+.chipText{
+    margin:0;
+    font-size: 10px;
+}
+
+.cardBox{
+    width: 90%;
+    height: auto;
+    margin: 0% 5%;
+    gap: 20px;
+    padding: 28px 0px;
+}
+
+.cardDisplay{
     display: flex;
-    flex-direction: column;
-    padding: 36px 26px;
+    flex-direction: row;
+    justify-content: space-evenly;
 }
 
-.box3_1{
-    height: 260px;
+.card{
+    width:158px;
+    height:124px;
+    cursor: pointer;
+
+    background-color: white;
+    border-radius: 4px;
+    border: 0px;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+
 }
 
-.box4{
-    height: 116px;
-    align-items: flex-start;
+.cardImg{
+    width: 158px;
+    height: auto;
+    overflow: hidden;
+    border-radius: 4px 4px 0px 0px;
+    transition: filter 0.3s ease;
 }
 
-.box5{
-    height: 375px;
-    padding: 29px 0px 28px 0px
+.cardTextWrapper {
+    width: 158px;
+    height: 26px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    /* position: absolute; */
+    top: 50%;
+    left: 50%;
+    /* transform: translate(-50%, -50%);*/
 }
 
-.situation{
-    border:1px solid red;
-    height:500px;
+.mainTxt {
+    font-size: 11px;
+    color:#333333; /* 기본 텍스트 색상 */
+    margin-left: 10px;
+    transition: color 0.3s ease; /* 텍스트 색상 전환을 부드럽게 설정 */
+}
+
+.hoverTxt {
+    font-size: 11px;
+    color: #3680DB;
+    margin: 0;
+    opacity: 0; /* 초기에는 보이지 않게 설정 */
+    transition: opacity 0.3s ease; /* 투명도 전환을 부드럽게 설정 */
+    margin-right: 10px
+}
+
+.card:hover{
+    background-color: #EEF6FF;
+}
+
+.card:hover .hoverTxt {
+    opacity: 1; /* hover 시 텍스트가 보이도록 설정 */
+}
+
+.card:hover .mainTxt {
+    color: #333333; /* hover 시 텍스트 색상 변경 */
+}
+
+.card:hover .cardImg {
+    filter: brightness(0.9); /* 이미지 밝기를 70%로 낮추어 어둡게 표현 */
+}
+
+.subhead{
+    margin: 24px 32px;
+    color: rgb(58, 58, 58);
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-weight: 600;
+}
+
+.bottomBox{
+    margin: 38px 0px 24px 0px
+}
+
+.bottomTxt{
+    font-size: 10px;
+    height: 20px;
+    margin: 0;
+}
+
+.situationLst{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    gap: 24px;
+}
+
+.situationBox{
+    width: 368px;
+    min-height: 70px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0px 18px 0px 18px;
+    background-color: #EEF6FF;
+    border-radius: 10px;
+    cursor: pointer;    
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.situationBox:hover{
+    background-color: #CCE3FF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.situationImg{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    padding-right: 12px;
+}
+
+.situationNum{
+    width: 21px;
+    height: 21px;
+    background-color:#58A3FE;
+    color: white;
+    border-radius: 10px;
+    font-size: 14px;
+
+    display: flex; /* Flexbox로 설정 */
+    align-items: center; /* 세로 가운데 정렬 */
+    justify-content: center; /* 가로 가운데 정렬 */
+    padding: 0px 0px 1px 0px;
+}
+
+.situationTxt{
+    margin: 0;
+    font-family: pretendard, -apple-system;
+    font-size: 15px;
+    color: #333333;
+    padding-left: 20px;
+    line-height: 22px
 }
 
 .bar{
@@ -91,19 +297,40 @@
     padding: 0px 0px 0px 16px
 }
 
+.menuBox{
+    display: flex;
+    flex-direction: column;
+    padding: 0px 32px;
+    gap: 32px;
+}
+
+.menuLst{
+    height: 84px;
+    align-items: flex-start;
+}
+
 .menu{
-    width: 60px;
+    width: 70px;
+    gap: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .menuImg{
-    width:60px;
-    height:60px;
-    border-radius: 5px;
+    width:50px;
+    height:50px;
+    padding: 0px 0px 10px 0px    
 }
 
 .menuText{
-    font-size:12px;
+    font-size:10px;
     margin: 0;
+    color: rgb(58, 58, 58);
+}
+
+.menuText:hover{
+    color: rgb(31, 117, 222);
 }
 
 .menuBtn{
@@ -130,4 +357,21 @@
 .menuImg_lit{
     width: 24px;
     height: 24px;
+}
+
+
+/* ======폰트======= */
+
+.head{
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-weight: 600;
+}
+
+.p {
+    margin: 0px;
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+
+.pretendard {
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 }

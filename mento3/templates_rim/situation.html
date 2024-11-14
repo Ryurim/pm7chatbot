@@ -1,0 +1,73 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>모두의 교실</title>
+        <link rel="stylesheet" href="/static/main.css" />
+        <link rel="stylesheet" href="/static/situation.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="outline">
+                <div id="clockBar" class="flex_between box1">
+                    <div id="clock"></div>
+                    <div id="bar" class="bar flex">
+                        <i class="fa-solid fa-signal"></i>
+                        <i class="fa-solid fa-wifi"></i>
+                        <i class="fa-solid fa-battery-three-quarters"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex indexBox2" onclick="window.location.href='/main'">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <h3>지진</h3>
+                    </div>
+                </div>
+                <div class="flex_column chooseSitBox">
+                    <div class="chooseSit">
+                        <h2 class="situTxt">탈출할 상황을 선택해주세요</h2>
+                    </div>
+                    <button
+                        class="flex_around situ"
+                        value="라면을 끓이고 있는데 집이 흔들린다면?"
+                        onclick="window.location.href='/chatbotPage'"
+                    >
+                        <img src="/static/image/situ1.png" alt="" />
+                        <h4 class="situTxt situTxt2">라면을 끓이고 있는데 집이 흔들린다면?</h4>
+                        <img src="/static/image/Noodles.png" />
+                    </button>
+                    <button class="flex_around situ" value="수업 중에 재난 경보가 울린다면?">
+                        <img src="/static/image/situ2.png" alt="" />
+                        <h4 class="situTxt situTxt2">수업 중에 재난 경보가 울린다면?</h4>
+                        <img src="/static/image/School.png" />
+                    </button>
+                    <button class="flex_around situ" value="친구들과 걸어가는 중에 땅이 흔들린다면?">
+                        <img src="/static/image/situ3.png" alt="" />
+                        <h4 class="situTxt situTxt2">친구들과 걸어가는 중에 땅이 흔들린다면?</h4>
+                        <img src="/static/image/Earthquakes.png" />
+                    </button>
+                    <button class="flex_around situ" value="지진으로 불이 난 상황을 마주한다면?">
+                        <img src="/static/image/situ4.png" alt="" />
+                        <h4 class="situTxt situTxt2">지진으로 불이 난 상황을 마주한다면?</h4>
+                        <img src="/static/image/Fire.png" />
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let situBtn = document.querySelectorAll(".situ");
+            situBtn.forEach((el) => {
+                el.addEventListener("click", () => {
+                    console.log(el.value);
+                });
+            });
+        </script>
+
+        <script></script>
+        <script src="/static/home.js"></script>
+        <script src="https://kit.fontawesome.com/be97bd8e1b.js" crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -1,0 +1,670 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>모두의 교실</title>
+        <link rel="stylesheet" href="/static/main.css" />
+        <link rel="stylesheet" href="/static/chatbot.css" />
+
+        <link rel="stylesheet" type="text/css" href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css'>
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="outline">
+                <div class="topBar">
+                    <div id="statusBar" class="flex_between box1">
+                        <div id="clock"></div>
+                        <div id="bar" class="bar flex">
+                            <i class="fa-solid fa-signal"></i>
+                            <i class="fa-solid fa-wifi"></i>
+                            <i class="fa-solid fa-battery-three-quarters"></i>
+                        </div>
+                    </div>
+
+                    <div class="appBar menuBtn flex" onclick="window.location.href='/situation'">
+                        <i class="pad_16 fa-solid fa-chevron-left"></i>
+                        <p class="pad_16 head">삐용챗</p>
+                    </div>
+                </div>
+                <audio id="alertAudio" src="../static/sound/beep.mp3"></audio>
+
+                <div class="main">
+                    <!-- 챗내용박스 start -->
+                    <div id="chatBox">
+                        <div class="info" id="info">
+                            <div class="infoBox">
+                                <img class="infoImg" src="/static/image/chat_info.jpg" />
+                                <p class="infoTxt">
+                                    평화로운 주말이다. 느긋하게 늦잠 자고 일어났으니, 이제 점심을 먹어볼까?<br>라면을 먹으려고 가스레인지의 불을 켰다.
+    <br>냄비 속 물이 보글보글 끓기 시작하는 순간,  갑자기 ...
+                                </p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <p class="startBtn container" id="startBtn">더보기</p>
+                        </div>
+
+                        <div class="alert container" id="alert">
+                            <img class="alertImg" src="/static/image/chat_alert.png" />
+                        </div>
+                    </div>
+                    <!-- 챗내용박스 end -->
+                </div>
+
+                <!-- 사용자 응답 보내기 start  -->
+                <div class="userInput flex">
+                    <input id="userInput" type="text" placeholder="궁금한 점을 입력하세요" />
+                    <i class="fa-regular fa-paper-plane" id="answerGo"></i>
+                </div>
+                <!-- 사용자 응답 보내기 end  -->
+            </div>
+        </div>
+
+        <script>
+            //사용자 입력칸
+            let userInput = document.getElementById("userInput");
+            userInput.addEventListener("keypress", (event) => {
+                if (event.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            //답변 보내는 버튼
+            let answerGo = document.getElementById("answerGo");
+            //채팅박스
+            let chatBox = document.getElementById("chatBox");
+            const info = document.getElementById("info");
+            const alertElement = document.getElementById("alert");
+            const alertAudio = document.getElementById("alertAudio");
+            let stage1 = document.getElementById("stage1");
+            let alertImg = document.getElementById("alertImg");
+            let messageIdCounter = 0; // 각 메시지에 고유한 ID 할당용
+            let loadingMessageId = 0;
+            let startBtnBox = document.querySelector(".startBtn");
+            let startBtn = document.getElementById("startBtn");
+            let userInputBox = document.querySelector(".userInput");
+
+            //백단이랑 소통할 때 사용할 변수입니다.
+            let xhr;
+
+            //처음으로 페이지가 로드될 때 순서대로 보여주고 싶으니까 타임 딜레이를 줍니다.
+            document.addEventListener("DOMContentLoaded", () => {
+                setTimeout(() => {
+                    info.classList.add("on");
+                }, 700);
+
+                setTimeout(() => {
+                    startBtnBox.classList.add("on");
+                }, 2000);
+
+            });
+
+                startBtn.addEventListener("click", () => {
+
+                    setTimeout(() => {
+                    alertElement.classList.add("on"); // alert 요소를 표시
+                }, 300); // 원하는 시간 설정
+
+                alertAudio.play().catch((error) => {
+                        console.error("Audio play failed:", error);
+                    });
+
+                setTimeout(() => {
+                    createSituation1();
+                    sessionStorage.setItem("stageNum", 1);
+                    // createSituation2();
+                    // createSituation3();
+                }, 1000);
+
+                setTimeout(() => {
+                    userInputBox.classList.add("on");
+                }, 1500);
+                })
+
+            chatBox.addEventListener("click", (e) => {
+                //스테이지별 선택지를 선택했는지 확인합니다.
+                if (e.target.classList.contains("stageSelect")) {
+                    if (e.target.classList.contains("stage1select")) {
+                        e.target.classList.add("selected");
+                        sendSelect(e.target.innerText, 1);
+                    }
+                    if (e.target.classList.contains("stage2select")) {
+                        e.target.classList.add("selected");
+                        sendSelect(e.target.innerText, 2);
+                    }
+                    if (e.target.classList.contains("question1")) {
+                        e.target.classList.add("selected");
+                        sendQuestion(e.target.innerText, 1);
+                    }
+                    if (e.target.classList.contains("question2")) {
+                        e.target.classList.add("selected");
+                        sendQuestion(e.target.innerText, 2);
+                    }
+                }
+
+                //다음 스테이지로 를 선택했을 때
+                if (e.target.classList.contains("nextBtn")) {
+                    if (e.target.classList.contains("next1")) {
+                        e.target.classList.add("selected");
+                        createSituation1();
+                    }
+                    if (e.target.classList.contains("next2")) {
+                        e.target.classList.add("selected");
+                        createSituation2();
+                    }
+                    if (e.target.classList.contains("next3")) {
+                        e.target.classList.add("selected");
+                        createSituation3();
+                    }
+                }
+
+                // 나 질문할래 를 선택했을 때
+                if (e.target.classList.contains("questionBtn")) {
+                    e.target.classList.add("selected");
+                    sendQuestion(e.target.innerText, sessionStorage.getItem("stageNum"));
+                }
+            });
+
+            //선택지 선택해서 메세지 전송하는 함수 -> 백단이랑 바로 소통
+            function sendSelect(txt, userStage) {
+                // 세션에 stage 저장 -> userInput에 직접 입력해서 보낼 때 사용
+                sessionStorage.setItem("stageNum", userStage);
+                console.log(txt);
+                let userMessage = txt;
+                if (!userMessage.trim()) return;
+
+                chatBox.innerHTML +=
+                    `
+                    <div class="userAnswer">
+                            <div class="userAnswerMsg">` +
+                    userMessage +
+                    `</div>
+                            <div class="userAnswerTime">` +
+                    getTime() +
+                    `</div>
+                        </div>
+                `;
+
+                // 스크롤바 하단으로 이동
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Send message to server
+                xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.OPENED) {
+                        console.log("답변 가져오기를 기다리는 중");
+                        userInput.disabled = true;
+                        answerGo.disabled = true;
+                        // sendBtn.disabled = true;
+                        userInput.value = "답변 가져오는 중...";
+                        // sendBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>';
+
+                        // "응답 생성 중..." 메시지 ID 생성
+                        loadingMessageId = "typingMessage" + messageIdCounter++;
+                        chatBox.innerHTML += `
+                    <div class="chatAnswer" id="loadingContainer${loadingMessageId}">
+                        <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                        <div class="chatbotMsgBox loading">
+                              <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+                        </div>
+                    </div>
+                `;
+                    }
+
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        console.log("요청 종료됨");
+                        userInput.disabled = false;
+                        answerGo.disabled = false;
+                        userInput.value = "";
+                        // sendBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+                        if (xhr.status === 200) {
+                            // Display chatbot response
+                            console.log("정상적으로 답변 가져옴");
+                            var response = JSON.parse(xhr.responseText);
+
+                            let isCorrect = response.is_correct;
+                            sessionStorage.setItem("prevAnswer", isCorrect);
+                            // let isCorrect = "True";
+                            let stage = response.stage;
+                            sessionStorage.setItem("stageNum", stage);
+                            // let stage = 1;
+                            let message = response.message;
+
+                            let messageId = "typingMessage" + messageIdCounter++;
+
+                            // "응답 생성 중..." 메시지 삭제
+                            let loadingContainer = document.getElementById(`loadingContainer${loadingMessageId}`);
+                            loadingContainer.remove();
+
+                            // 조건부 버튼 HTML 생성
+                            let optionButtons =
+                                isCorrect === "True"
+                                    ? `<button class="nextBtn next${stage}">다음 스테이지로!</button>`
+                                    : isCorrect === "end"
+                                    ? `<button class="nextBtn" onclick="window.location.href='/situation'">탈출 성공!</button>`
+                                    : `<button class="nextBtn next${stage}">정답 다시 고를래!</button>`;
+
+                            chatBox.innerHTML +=
+                                `
+                        <div class="chatAnswer">
+                            <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                            <div class="chatbotMsgBox flex_column">
+                                <span class="chatbotName">삐용챗</span>
+                                <div class="chatbotMsg" id="${messageId}"></div>
+                            </div>
+                                <div class="selectOption">
+                                <button class="questionBtn question">나 질문 있어!</button>
+                                ` +
+                                optionButtons +
+                                `
+
+                            </div>
+                            <div class="chatAnswerTime">` +
+                                getTime() +
+                                `</div>
+                        </div>
+                            `;
+
+                            let typingElement = document.getElementById(messageId);
+                            typeMessage(typingElement, message);
+                            // Scroll to the bottom of the chat box
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        } else if (xhr.status === 0) {
+                            console.log("답변 가져오기 중지함");
+                            messageInput.disabled = false;
+                            messageInput.value = "";
+                            sendBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        } else {
+                            alert("Error: " + xhr.status);
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }
+                    }
+                };
+                xhr.open("POST", "/chat", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({ message: userMessage, stage: userStage }));
+            }
+
+            // 메세지 전송하는 함수
+            answerGo.addEventListener("click", () => {
+                console.log("전송");
+                sendMessage();
+            });
+
+            // 백단이랑 소통하게 되는 부분의 함수
+            function sendMessage() {
+                let userMessage = userInput.value;
+                let userStage = sessionStorage.getItem("stageNum");
+                let prevAnswer = sessionStorage.getItem("prevAnswer");
+                console.log(prevAnswer);
+
+                if (!userMessage.trim()) return;
+                console.log(userMessage);
+
+                userInput.value = "";
+                chatBox.innerHTML +=
+                    `
+                    <div class="userAnswer">
+                            <div class="userAnswerMsg">` +
+                    userMessage +
+                    `</div>
+                            <div class="userAnswerTime">` +
+                    getTime() +
+                    `</div>
+                        </div>
+                `;
+
+                // 스크롤바 하단으로 이동
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Send message to server
+                xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.OPENED) {
+                        console.log("답변 가져오기를 기다리는 중");
+                        userInput.disabled = true;
+                        answerGo.disabled = true;
+                        // sendBtn.disabled = true;
+                        userInput.value = "답변 가져오는 중...";
+                        // sendBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>';
+
+                        // "응답 생성 중..." 메시지 ID 생성
+                        loadingMessageId = "typingMessage" + messageIdCounter++;
+                        chatBox.innerHTML += `
+                    <div class="chatAnswer" id="loadingContainer${loadingMessageId}">
+                        <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                        <div class="chatbotMsgBox loading">
+                              <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+                        </div>
+                    </div>
+                `;
+                    }
+
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        console.log("요청 종료됨");
+                        userInput.disabled = false;
+                        answerGo.disabled = false;
+                        userInput.value = "";
+                        // sendBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+                        if (xhr.status === 200) {
+                            // Display chatbot response
+                            console.log("정상적으로 답변 가져옴");
+                            var response = JSON.parse(xhr.responseText);
+
+                            let isCorrect = response.is_correct;
+                            // let isCorrect = "True";
+                            let stage = response.stage;
+                            sessionStorage.setItem("stageNum", stage);
+                            // let stage = 1;
+                            let message = response.message;
+                            // messageId 설정
+                            let messageId = "typingMessage" + messageIdCounter++;
+                            // 조건부 버튼 HTML 생성
+
+                            // "응답 생성 중..." 메시지 삭제
+                            let loadingContainer = document.getElementById(`loadingContainer${loadingMessageId}`);
+                            loadingContainer.remove();
+
+                            let optionButtons =
+                                isCorrect === "True"
+                                    ? `<button class="nextBtn next${stage}">다음 스테이지로!</button>`
+                                    : isCorrect === "end"
+                                    ? `<button class="nextBtn" onclick="window.location.href='/situation'">탈출 성공!</button>`
+                                    : `<button class="nextBtn next${stage}">정답 다시 고를래!</button>`;
+
+                            chatBox.innerHTML +=
+                                `
+                        <div class="chatAnswer">
+                            <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                            <div class="chatbotMsgBox flex_column">
+                                <span class="chatbotName">삐용챗</span>
+                                <div class="chatbotMsg" id="${messageId}"></div>
+                            </div>
+                                <div class="selectOption">
+                                <button class="questionBtn question">나 질문 있어!</button>
+                                ` +
+                                optionButtons +
+                                `
+
+                            </div>
+                            <div class="chatAnswerTime">` +
+                                getTime() +
+                                `</div>
+                        </div>
+                            `;
+                            let typingElement = document.getElementById(messageId);
+                            typeMessage(typingElement, message);
+
+                            // Scroll to the bottom of the chat box
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        } else if (xhr.status === 0) {
+                            console.log("답변 가져오기 중지함");
+                            messageInput.disabled = false;
+                            messageInput.value = "";
+                            sendBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        } else {
+                            alert("Error: " + xhr.status);
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }
+                    }
+                };
+                xhr.open("POST", "/chat", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({ message: userMessage, stage: userStage, prev: prevAnswer }));
+            }
+
+            function sendQuestion(txt, userStage) {
+                let userMessage = txt;
+                let prevAnswer = sessionStorage.getItem("prevAnswer");
+                if (!userMessage.trim()) return;
+
+                chatBox.innerHTML +=
+                    `
+                    <div class="userAnswer">
+                            <div class="userAnswerMsg">` +
+                    userMessage +
+                    `</div>
+                            <div class="userAnswerTime">` +
+                    getTime() +
+                    `</div>
+                        </div>
+                `;
+
+                // 스크롤바 하단으로 이동
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Send message to server
+                xhr = new XMLHttpRequest();
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.OPENED) {
+                        console.log("답변 가져오기를 기다리는 중");
+                        userInput.disabled = true;
+                        answerGo.disabled = true;
+                        // sendBtn.disabled = true;
+                        userInput.value = "답변 가져오는 중...";
+                        // sendBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>';
+
+                        // "응답 생성 중..." 메시지 ID 생성
+                        loadingMessageId = "typingMessage" + messageIdCounter++;
+                        chatBox.innerHTML += `
+                    <div class="chatAnswer" id="loadingContainer${loadingMessageId}">
+                        <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                       <div class="chatbotMsgBox loading">
+                              <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+                        </div>
+                    </div>
+                `;
+                    }
+
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        console.log("요청 종료됨");
+                        userInput.disabled = false;
+                        answerGo.disabled = false;
+                        userInput.value = "";
+                        // sendBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+                        if (xhr.status === 200) {
+                            // Display chatbot response
+                            console.log("정상적으로 답변 가져옴");
+                            var response = JSON.parse(xhr.responseText);
+
+                            let isCorrect = response.is_correct;
+                            // let isCorrect = "True";
+                            let stage = response.stage;
+                            sessionStorage.setItem("stageNum", stage);
+                            // let stage = 1;
+                            let message = response.message;
+                            // messageId 설정
+                            let messageId = "typingMessage" + messageIdCounter++;
+
+                            // "응답 생성 중..." 메시지 삭제
+                            let loadingContainer = document.getElementById(`loadingContainer${loadingMessageId}`);
+                            loadingContainer.remove();
+
+                            // 조건부 버튼 HTML 생성
+                            let optionButtons =
+                                isCorrect === "True"
+                                    ? `<button class="nextBtn next${stage}">다음 스테이지로!</button>`
+                                    : isCorrect === "end"
+                                    ? `<button class="nextBtn" onclick="window.location.href='/situation'">탈출 성공!</button>`
+                                    : `<button class="nextBtn next${stage}">정답 다시 고를래!</button>`;
+
+                            chatBox.innerHTML +=
+                                `
+                        <div class="chatAnswer">
+                            <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                            <div class="chatbotMsgBox flex_column">
+                                <span class="chatbotName">삐용챗</span>
+                                <div class="chatbotMsg" id="${messageId}"></div>
+                            </div>
+                                <div class="selectOption">
+                                <button class="questionBtn question">나 질문 있어!</button>
+                                ` +
+                                optionButtons +
+                                `
+
+                            </div>
+                            <div class="chatAnswerTime">` +
+                                getTime() +
+                                `</div>
+                        </div>
+                            `;
+
+                            let typingElement = document.getElementById(messageId);
+                            typeMessage(typingElement, message);
+
+                            // Scroll to the bottom of the chat box
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        } else if (xhr.status === 0) {
+                            console.log("답변 가져오기 중지함");
+                            messageInput.disabled = false;
+                            messageInput.value = "";
+                            sendBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i>';
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        } else {
+                            alert("Error: " + xhr.status);
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }
+                    }
+                };
+                xhr.open("POST", "/chat", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.send(JSON.stringify({ message: userMessage, stage: userStage, prev: prevAnswer }));
+            }
+
+            // 상황1 만들기
+            function createSituation1() {
+                sessionStorage.setItem("stageNum", 1);
+                chatBox.innerHTML +=
+                    `
+                    <div class="chatAnswer" id="stage1">
+                            <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                            <div class="chatbotMsgBox flex_column">
+                                <span class="chatbotName">삐용챗</span>
+                                <div>
+                                    <img class="stageImg" src="/static/image/chatbot_1_.png" />
+                                </div>
+                                <div class="chatbotMsg">
+                                    <h4>1단계</h4>
+                                    라면이 끓고 있는 가스레인지는 흔들리고, 주변 물건들이 떨어지기 시작하고 있어요! 지금 어떻게 해야 할까요?
+                                </div>
+                                <div class="stageSelect stage1select">
+                                    가스레인지를 끄고, 창문 가까이로 가서 밖을 확인할래
+                                </div>
+                                <div class="stageSelect stage1select">
+                                    당장 식탁이나 튼튼한 가구 밑으로 들어갈래
+                                </div>
+                                <div class="stageSelect stage1select">
+                                    라면을 마저 끓이고 상황을 지켜볼래. 지진은 금방 끝날 것 같아!
+                                </div>
+                                <div class="stageSelect question1">잘 모르겠어. 나 질문해도 돼?</div>
+                            </div>
+
+                            <div class="chatAnswerTime">` +
+                    getTime() +
+                    `</div>
+                        </div>
+                `;
+            }
+
+            // 상황2 만들기
+            function createSituation2() {
+                sessionStorage.setItem("stageNum", 2);
+                chatBox.innerHTML +=
+                    `
+                        <div class="chatAnswer" id="stage2">
+                            <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                            <div class="chatbotMsgBox flex_column">
+                                <span class="chatbotName">삐용챗</span>
+                                <div>
+                                    <img class="stageImg" src="/static/image/chatbot_2.png" />
+                                </div>
+                                <div class="chatbotMsg">
+                                    <h4>2단계</h4>
+                                    이제는 지진이 잠시 멈췄지만 추가 여진이 있을지도 몰라요. 주방에는 여전히 떨어질 
+물건들이 많고 가스레인지가 꺼져 있지 않아요. 지금 어떤 행동을 해야 할까요?
+                                </div>
+                                <div class="chatbotMsg">
+                                    지금 어떤 행동을 해야 할까요?
+                                </div>
+
+                                <div class="stageSelect stage2select">
+                                    가스레인지를 잠그고 안전한 위치에서 대기하며 여진에 대비해요.
+                                </div>
+                                <div class="stageSelect stage2select">주방을 정리하며 떨어진 물건들을 정돈해요. 어수선한 주방을 깨끗하게 해야 안전할 것 같아요!</div>
+                                <div class="stageSelect stage2select">
+                                    주방에서 나가 친구들에게 전화해요. 모두 괜찮은지 확인해야겠어요.                                </div>
+                                <div class="stageSelect question2">잘 모르겠어. 나 질문해도 돼?</div>
+                            </div>
+                            <div class="chatAnswerTime">` +
+                    getTime() +
+                    `</div>
+                        </div>
+                `;
+            }
+
+            // 상황3 만들기
+            function createSituation3() {
+                sessionStorage.setItem("stageNum", 3);
+                chatBox.innerHTML +=
+                    `
+                        <div class="chatAnswer" id="stage3">
+                            <img class="chatbotImg" src="/static/image/ai_profile.png" />
+                            <div class="chatbotMsgBox flex_column">
+                                <span class="chatbotName">삐용챗</span>
+                                <div>
+                                    <img class="stageImg" src="/static/image/chatbot_3.png" />
+                                </div>
+                                <div class="chatbotMsg">
+                                    <h4>3단계</h4>
+                                    몇 분 후, 추가 여진 경보가 울리며 모든 사람에게 건물 밖으로 대피하라는 안내가 나오고 있어요.
+                                </div>
+                                <div class="chatbotMsg">
+                                    집 밖으로 나가려는 순간, 엘리베이터와 계단 중 무엇을 사용할지 고민이 되는데 어떻게 할까요? 이유도 함께 대답해 주세요.
+                                </div>
+                            </div>
+                            <div class="chatAnswerTime">` +
+                    getTime() +
+                    `</div>
+                        </div>
+
+                `;
+            }
+
+            // 현재 시간 설정하기
+            function getTime() {
+                let date = new Date();
+                let hours = String(date.getHours()).padStart(2, "0");
+                let minutes = String(date.getMinutes()).padStart(2, "0");
+                return hours + " : " + minutes;
+            }
+
+                        // 타이핑 효과 함수 (한 글자씩)
+                        function typeMessage(element, message, index = 0) {
+                if (index < message.length) {
+                    element.innerHTML += message.charAt(index);
+                    setTimeout(() => typeMessage(element, message, index + 1), 20);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            }
+        </script>
+
+        <script></script>
+        <script src="/static/home.js"></script>
+        <script src="https://kit.fontawesome.com/be97bd8e1b.js" crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -1,0 +1,293 @@
+.outline {
+    position: relative;
+    height: auto;
+}
+
+.topBar{
+    background-color: white;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    width: 444px;
+    height: auto;
+    background-color: white;
+    color: #333333;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    z-index: 1000;
+    flex-direction: column;
+}
+
+.startBtn{
+    width: 100px;
+    height: 28px;
+    background-color: white;
+    border: 1px solid #C8C8C8;
+    border-radius: 10px;
+    font-family: pretendard;
+    font-weight: 400;
+    margin: 12px;
+    color: #222222;
+    cursor: pointer;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.startBtn:hover{
+    background-color: #f7f7f7;
+    border: 1px solid #C8C8C8;
+    color: #4C7AEF;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.info,
+.startBtn,
+.alert,
+.userInput {
+    visibility: hidden;
+}
+
+.info.on,
+.startBtn.on,
+.alert.on,
+.userInput.on {
+    visibility: visible;
+}
+
+.infoBox{
+    width: 444px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+.infoImg{
+    width: 310px;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.infoTxt{
+    font-family: pretendard, -apple-system;
+    font-size: 14px;
+    line-height: 29px;
+    padding: 16px 40px 16px 40px;
+    margin: 0;
+    color: #222222;
+}
+
+.alertImg{
+    width: 90%
+}
+
+/* =======궁금한 점을 입력하세요 부분 ======= */
+.userInput {
+    justify-content: center;
+    gap: 4%;
+    height: 62px;
+    width: 100%;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.2); /* 위쪽에만 그림자 */
+}
+
+#userInput {
+    width: 80%;
+    height: 70%;
+    border-radius: 10px;
+    border: none;
+    background-color: #f7f7f7;
+    padding-left: 14px;
+}
+
+.fa-paper-plane {
+    cursor: pointer;
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 74px;
+}
+#chatBox {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: auto;
+    border: none;
+    margin-bottom: 20px;
+    align-items: center;
+    background-color: #FAFAFA;
+}
+
+.chatAnswer {
+    margin-top: 20px;
+    width: 78%;
+    align-self: start;
+    position: relative;
+}
+
+.chatbotImg {
+    width: 39px;
+    position: absolute;
+}
+.chatbotName {
+    color: #1F255A;
+    font-size: 12px;
+    margin-bottom: 6px;
+    font-family: Pretendard, -apple-system;
+}
+.chatbotMsgBox {
+    margin-left: 50px;
+}
+.chatbotMsg {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 13px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-weight: 300;
+
+}
+.chatAnswerTime {
+    color: #989898;
+    font-size: 8px;
+    position: absolute;
+    right: 0;
+}
+
+.userAnswer {
+    border-radius: 5px;
+    padding: 14px;
+    margin-top: 20px;
+    width: 57%;
+    background-color: #FFE5E5;
+    align-self: end;
+    position: relative;
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-weight: 300;
+
+}
+.userAnswerTime {
+    color: #989898;
+    font-size: 8px;
+    position: absolute;
+    right: 0;
+    bottom: -10px;
+}
+
+.userAnswerMsg{
+    word-break: break-word; /* 텍스트가 박스 너비를 넘기지 않도록 줄바꿈 */
+    white-space: pre-wrap; /* 줄바꿈 문자 유지 및 자동 줄바꿈 */
+}
+
+
+/* ======스테이지별 선택 항목======= */
+/* #stage1 {
+    visibility: hidden;
+}
+#stage1.on {
+    visibility: visible;
+} */
+.stageSelect {
+    border-radius: 10px;
+    padding: 13px;
+    margin-bottom: 10px;
+    background-color: #E3EBFF;
+    border: 2px solid #E3EBFF;
+    cursor: pointer;
+    font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    font-weight: 300;
+}
+.stageSelect:hover {
+    background-color: #E3EBFF;
+    border: 2px solid #7C9FF9;
+    color: #4B76E1;
+}
+.stageSelect.selected {
+    background-color: rgb(124, 159, 249);
+    border: 2px solid #7C9FF9;
+    color: white;
+
+}
+
+.selectOption {
+    margin-left: 50px;
+}
+
+.stageImg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.questionBtn,
+.nextBtn {
+    width: 76px;
+    height: 26px;
+    border: 1px solid rgb(249, 218, 150);
+    font-size: 10px;
+    background: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.nextBtn {
+    width: 100px;
+}
+
+.questionBtn:hover,
+.nextBtn:hover {
+    background-color: rgb(255, 240, 207);
+}
+
+.questionBtn.selected,
+.nextBtn.selected {
+    background-color: rgb(255, 240, 207);
+}
+
+
+.loading {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    background-color: #F2F2F2;
+    border-radius: 5px;
+    padding: 13px;
+}
+.dot {
+    border-radius: 9999px;
+    height: 0.5rem;
+    width: 0.5rem;
+    background: rgba(148 163 184 / 1);
+    animation: wave 1s infinite;
+}
+.dot:nth-child(1) {
+    animation-delay: 0.3333s;
+}
+.dot:nth-child(2) {
+    animation-delay: 0.6666s;
+}
+.dot:nth-child(3) {
+    animation-delay: 0.9999s;
+}
+@keyframes wave {
+    0% {
+        transform: translateY(0px);
+        background: rgba(148 163 184 / 0);
+    }
+    50% {
+        transform: translateY(-0.5rem);
+        background: rgba(148 163 184 / 0.8);
+    }
+    100% {
+        transform: translateY(0px);
+        background: rgba(148 163 184 / 0);
+    }
+}

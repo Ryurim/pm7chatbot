@@ -1,0 +1,32 @@
+.chooseSitBox {
+    gap: 20px;
+    align-items: center;
+}
+.situTxt {
+    margin: 0;
+    padding: 0;
+}
+.chooseSit {
+    text-align: center;
+    background-color: rgb(255, 147, 78);
+    color: #fff;
+    width: 372px;
+    height: 85px;
+    line-height: 85px;
+    border-radius: 10px;
+}
+
+.situ {
+    cursor: pointer;
+    background-color: rgb(255, 241, 227);
+    width: 372px;
+    height: 68px;
+    border: none;
+    border-radius: 10px;
+}
+
+.situTxt2 {
+    width: 68%;
+    overflow-wrap: break-word; /* 단어 단위 줄바꿈 */
+    word-break: keep-all; /* 띄어쓰기 기준 줄바꿈 */
+}

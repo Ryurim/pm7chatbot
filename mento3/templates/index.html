@@ -5,51 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>모두의 교실</title>
     <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/chatbot.css" />
+
 </head>
+
 <body>
     <div class="container">
         <div class="outline">
-            <div class="box1 flex_between">
-                <div id="clock"></div>
-                <div class="flex bar">
-                    <div><i class="fa-solid fa-signal"></i></div>
-                    <div><i class="fa-solid fa-wifi"></i></div>
-                    <div><i class="fa-solid fa-battery-full"></i></div>
+            <div class="topBar">
+                <div class="statusBar flex_between">
+                    <div id="clock"></div>
+                    <div class="flex bar">
+                        <div><i class="fa-solid fa-signal"></i></div>
+                        <div><i class="fa-solid fa-wifi"></i></div>
+                        <div><i class="fa-solid fa-battery-full"></i></div>
+                    </div>
+                </div>
+                <div class="appBar menuBtn flex" onclick="window.location.href='/'">
+                    <i class="pad_16 fa-solid fa-chevron-left"></i>
+                    <p class="pad_16 head">안전 · 건강교육</p>
                 </div>
             </div>
-            <div class="box2_1 flex" onclick="window.location.href='/'">
-                <i class="pad_16 fa-solid fa-arrow-left"></i>
-                <p class="pad_16">안전 · 건강교육</p>
+
+            <div class="mainCont">
+                <div>
+                    <img class="topImg" src="/static/image/index_top.png" alt="안전·건강교육 챗봇 삐용이">
+                </div>
+
+                <div>
+                    <p class="subhead">오늘의 주제 선택하기</p>
+                </div>
+
+                <div class="boxChip flex_evenly">
+                    <div class="chipOn container">
+                        <p class="chipText">재난 안전</p>
+                    </div>
+                    <div class="chip container">
+                        <p class="chipText">생활 안전</p>
+                    </div>
+                    <div class="chip container">
+                        <p class="chipText">보건 교육</p>
+                    </div>
+                    <div class="chip container">
+                        <p class="chipText">예방 교육</p>
+                    </div>
+                </div>
+
+                <div class="cardBox flex_column">
+
+                    <!-- 1 줄 시작 -->
+                    <div class="cardDisplay">
+                        <button class="card column" onclick="window.location.href='/situation'">
+                            <img class="cardImg" src="/static/image/card_1.png" alt="">
+                            <div class="cardTextWrapper">
+                                <p class="cardTxt mainTxt">지진</p>
+                                <p class="cardTxt hoverTxt">대피하러 가기</p>
+                            </div>                        
+                        </button>
+                        <button class="card column" onclick="window.location.href='/situation'">
+                            <img class="cardImg" src="/static/image/card_2.png" alt="">
+                            <div class="cardTextWrapper">
+                                <p class="cardTxt mainTxt">화재</p>
+                                <p class="cardTxt hoverTxt">대피하러 가기</p>
+                            </div>                        
+                        </button>
+                    </div>
+
+                    <!-- 2 줄 시작 -->
+                    <div class="cardDisplay">
+                        <button class="card column" onclick="window.location.href='/situation'">
+                            <img class="cardImg" src="/static/image/card_3.png" alt="">
+                            <div class="cardTextWrapper">
+                                <p class="cardTxt mainTxt">황사 · 미세먼지</p>
+                                <p class="cardTxt hoverTxt">대피하러 가기</p>
+                            </div>                        
+                        </button>
+                        <button class="card column" onclick="window.location.href='/situation'">
+                            <img class="cardImg" src="/static/image/card_4.png" alt="">
+                            <div class="cardTextWrapper">
+                                <p class="cardTxt mainTxt">폭염</p>
+                                <p class="cardTxt hoverTxt">대피하러 가기</p>
+                            </div>                        
+                        </button>
+                    </div>
+                    
+                    <!-- 3 줄 시작 -->
+                    <div class="cardDisplay">
+                        <button class="card column" onclick="window.location.href='/situation'">
+                            <img class="cardImg" src="/static/image/card_5.png" alt="">
+                            <div class="cardTextWrapper">
+                                <p class="cardTxt mainTxt">태풍 · 집중호우</p>
+                                <p class="cardTxt hoverTxt">대피하러 가기</p>
+                            </div>                        
+                        </button>
+                        <button class="card column" onclick="window.location.href='/situation'">
+                            <img class="cardImg" src="/static/image/card_6.png" alt="">
+                            <div class="cardTextWrapper">
+                                <p class="cardTxt mainTxt">대설 · 한파</p>
+                                <p class="cardTxt hoverTxt">대피하러 가기</p>
+                            </div>                        
+                        </button>
+                    </div>
+                    <!-- card 끝 -->
+
+
             </div>
-            <div class="box3_1">
-                <img src="/static/image/안전건강교육.png" alt="">
-            </div>
-            <div class="box5 flex_column">
-                <div class="menuBtn_lit row menuText" onclick="window.location.href='/situation'">
-                    <img class="menuImg_lit" src="/static/image/menu_지진.png" alt="">
-                    <p>지진</p>
-                </div>
-                <div class="menuBtn_lit row menuText">
-                    <img class="menuImg_lit" src="/static/image/menu_태풍.png" alt="">
-                    <p>화재</p>
-                </div>
-                <div class="menuBtn_lit row menuText">
-                    <img class="menuImg_lit" src="/static/image/menu_폭설.png" alt="">
-                    <p>태풍·집중호우</p>
-                </div>
-                <div class="menuBtn_lit row menuText">
-                    <img class="menuImg_lit" src="/static/image/menu_폭염.png" alt="">
-                    <p>황사·미세먼지</p>
-                </div>
-                <div class="menuBtn_lit row menuText">
-                    <img class="menuImg_lit" src="/static/image/menu_화재.png" alt="">
-                    <p>폭염</p>
-                </div>
-                <div class="menuBtn_lit row menuText">
-                    <img class="menuImg_lit" src="/static/image/menu_황사.png" alt="">
-                    <p>대설·한파</p>
-                </div>
-            </div>
+
         </div>
             
     </div>

@@ -3,11 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>모두의 교실</title>
+    <link rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/chatbot.css" />
+
+    <link rel="stylesheet" type="text/css" href='https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css'>
+
 </head>
 <body>
-    <div class="situation">
+    <div class="container">
+        <div class="outline">
+            <div class="topBar">
+                <div class="statusBar flex_between">
+                    <div id="clock"></div>
+                    <div class="flex bar">
+                        <div><i class="fa-solid fa-signal"></i></div>
+                        <div><i class="fa-solid fa-wifi"></i></div>
+                        <div><i class="fa-solid fa-battery-full"></i></div>
+                    </div>
+                </div>
+                <div class="appBar menuBtn flex" onclick="window.location.href='/main'">
+                    <i class="pad_16 fa-solid fa-chevron-left"></i>
+                    <p class="pad_16 head">지진</p>
+                </div>
+            </div>
 
+            <div class="mainCont">
+
+                <div>
+                    <img class="topImg" src="/static/image/situation_top.png" alt="안전·건강교육 챗봇 삐용이">
+                </div>
+
+
+                <div>
+                    <p class="subhead">오늘의 상황 선택하기</p>
+                </div>
+
+                <!-- 상황 리스트 시작 -->
+                <div class="situationLst column">
+                    <div class="situationBox" onclick="window.location.href='/chatbotPage'">
+                        <div class="row container">
+                            <div>
+                                <p class="situationNum">1</p>
+                            </div>
+                            <div class="situationTxt">
+                                혼자 라면을 끓이고 있는데, <br>갑자기 집이 흔들린다면?
+                            </div>
+                        </div>
+                        <div>
+                            <img class="situationImg" src="/static/image/situation_img_1.png" alt="">
+                        </div>
+                    </div>
+
+                    <div class="situationBox" onclick="window.location.href='/chatbotPage'">
+                        <div class="row container">
+                            <div>
+                                <p class="situationNum">2</p>
+                            </div>
+                            <div class="situationTxt">
+                                학교에서 수업을 듣던 중<br>재난 경보가 울린다면?
+                            </div>
+                        </div>
+                        <div>
+                            <img class="situationImg" src="/static/image/situation_img_2.png" alt="">
+                        </div>
+                    </div>
+
+                    <div class="situationBox" onclick="window.location.href='/chatbotPage'">
+                        <div class="row container">
+                            <div>
+                                <p class="situationNum">3</p>
+                            </div>
+                            <div class="situationTxt">
+                                친구들과 학원으로 가다가 <br>땅이 흔들린다면?
+                            </div>
+                        </div>
+                        <div>
+                            <img class="situationImg" src="/static/image/situation_img_3.png" alt="">
+                        </div>
+                    </div>
+
+                    <div class="situationBox" onclick="window.location.href='/chatbotPage'">
+                        <div class="row container">
+                            <div>
+                                <p class="situationNum">4</p>
+                            </div>
+                            <div class="situationTxt">
+                                지진 때문에 대피하던 중에<br>불이 난 상황을 마주한다면?
+                            </div>
+                        </div>
+                        <div>
+                            <img class="situationImg" src="/static/image/situation_img_4.png" alt="">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    
     </div>
+    <script src="https://kit.fontawesome.com/25d2563d2d.js" crossorigin="anonymous"></script>
+    <script src="/static/home.js">
+    </script>
+
 </body>
 </html>

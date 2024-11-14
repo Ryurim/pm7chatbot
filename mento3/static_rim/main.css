@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.outline {
+    width: 444px;
+    height: 710px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.flex_around {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.flex_between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.flex_evenly {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.flex_column {
+    display: flex;
+    flex-direction: column;
+}
+
+.bar {
+    gap: 10px;
+}
+
+.box1 {
+    padding: 0 20px;
+}
+
+.box2 {
+    height: 302px;
+}
+
+.box3 {
+    padding: 36px 26px;
+    display: flex;
+    flex-direction: column;
+}
+
+.box4 {
+    height: 116px;
+    align-items: flex-start;
+}
+
+.menu {
+    width: 60px;
+}
+
+.menuBtn {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.menuImg {
+    width: 60px;
+    height: 60px;
+    border-radius: 5px;
+}
+
+.menuTxt {
+    font-size: 12px;
+    margin: 0;
+}
+
+.fa-arrow-left {
+    color: #c8c8c8;
+}
+
+.indexBox2 {
+    padding-left: 10px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.disasterBtn {
+    background-color: rgb(255, 241, 227);
+    border: none;
+    border-radius: 5px;
+    height: 38px;
+    width: 256px;
+    cursor: pointer;
+}
+
+.indexBox3 {
+    height: 100%;
+    justify-content: space-around;
+    align-items: center;
+}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상황 선택 - {{ disaster }}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center mb-4">{{ disaster }}</h1>
+        <p class="text-xl text-center mb-8">탈출할 상황을 선택해보세요!</p>
+        <div class="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {% for situation in situations %}
+            <a href="/chat/{{ disaster }}/{{ loop.index0 }}" 
+               class="bg-white hover:bg-gray-50 p-6 rounded-lg shadow-md text-center transition duration-300">
+                {{ situation }}
+            </a>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-8">
+            <a href="/" class="text-blue-500 hover:text-blue-700">← 처음으로 돌아가기</a>
+        </div>
+    </div>
+</body>
+</html>

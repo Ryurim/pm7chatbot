@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../static/main.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-latest.js"></script>
+    <script
+      src="https://kit.fontawesome.com/80ee6f9b82.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <title>삐용챗</title>
+  </head>
+  <body>
+    <div class="main" id="">
+      <div class="container" id="">
+        <div class="flex" id="">
+          <!-- 왼쪽 상태바 start -->
+          <div class="left_body" id=""></div>
+
+          <!-- 왼쪽 상태바 end -->
+          <!-- 오른쪽 상태바 -->
+          <div class="right_body" id="right_body">
+            <!-- header start -->
+            <div class="header" id="header">
+              <div>
+                <a href="/">
+                  <img class="home" src="../static/home.png" />
+                </a>
+              </div>
+              <div
+                class="
+              "
+                id=""
+              >
+                <img src="../static/logogogo.png" alt="Edu Law Bot Logo" />
+              </div>
+            </div>
+
+            <!-- header end -->
+
+            <div class="chatBox" id="chatBox">
+              <!-- Chat messages will be appended here -->
+            </div>
+            <div class="" id="">
+              <!-- <div class="chatBox_img"><img src="../static/Character.png" alt="chunjae_img"></div> -->
+              <div class="userInput" id="userInput">
+                <input
+                  type="text"
+                  id="message"
+                  placeholder="선생님! 오늘은 어떤것을 도와드릴까요?"
+                  style="color: rgb(0, 0, 0)"
+                />
+                <button id="sendBtn">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </div>
+            </div>
+            <div class="scroll-to-bottom" id="scrollToBottomBtn">
+              <i style="margin-left: 2px" class="fa-solid fa-arrow-down"></i>
+            </div>
+          </div>
+          <!-- 오른쪽 상태바 end -->
+          <script type="module">
+            import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+            document
+              .getElementById("sendBtn")
+              .addEventListener("click", sendMessage);
+            const messageInput = document.getElementById("message");
+            const chatBox = document.getElementById("chatBox");
+            const sendBtn = document.getElementById("sendBtn");
+            let xhr;
+            let right_body = document.getElementById("right_body");
+            let header = document.querySelector("#header");
+
+            messageInput.addEventListener("keyup", (e) => {
+              if (e.keyCode === 13) {
+                sendMessage();
+              }
+            });
+
+            function sendMessage() {
+              // 애니메이션이 끝난 후 헤더가 천천히 나타나게 함
+              header.style.visibility = "visible";
+              // 배경 이미지가 커지면서 사라지도록 애니메이션 클래스 추가
+              right_body.classList.add("fade-out");
+
+              console.log(sendBtn.innerHTML);
+              if (sendBtn.innerHTML === '<i class="fa-solid fa-spinner"></i>') {
+                xhr.abort();
+              }
+
+              let message = messageInput.value;
+              if (!message.trim()) return;
+
+              // Display user message
+              var userMessage = document.createElement("div");
+              userMessage.classList.add("userInput");
+              userMessage.textContent = message;
+              chatBox.appendChild(userMessage);
+
+              // 스크롤바 하단으로 이동
+              chatBox.scrollTop = chatBox.scrollHeight;
+
+              // Clear the input field
+              messageInput.value = "";
+
+              // Send message to server
+              xhr = new XMLHttpRequest();
+
+              xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.OPENED) {
+                  console.log("답변 가져오기를 기다리는 중");
+                  messageInput.disabled = true;
+                  // sendBtn.disabled = true;
+                  messageInput.value = "답변 가져오는 중...";
+                  sendBtn.innerHTML = '<i class="fa-solid fa-spinner"></i>';
+                }
+
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                  console.log("요청 종료됨");
+                  messageInput.disabled = false;
+                  sendBtn.disabled = false;
+                  messageInput.value = "";
+                  sendBtn.innerHTML =
+                    '<i class="fa-solid fa-magnifying-glass"></i>';
+                  if (xhr.status === 200) {
+                    // Display chatbot response
+                    console.log("정상적으로 답변 가져옴");
+                    var response = JSON.parse(xhr.responseText);
+                    var ansImg = document.createElement("img");
+                    ansImg.className = "ansImg";
+                    ansImg.src = "../static/image.png";
+                    var botMessage = document.createElement("div");
+                    botMessage.classList.add("answer");
+                    botMessage.classList.add("space");
+                    // response.message를 messageContent에 저장
+                    var messageContent = response.message;
+                    console.log(messageContent);
+                    // 코드 블록을 감싸는 백틱(```), html 제거
+                    messageContent = messageContent.replace(/```/g, "");
+                    messageContent = messageContent.replace("html", "");
+                    messageContent = messageContent.replace("markdown", "");
+                    // 메시지에 <table>과 같은 태그가 포함되어 있는지 확인
+                    if (
+                      messageContent.includes("<table>") ||
+                      messageContent.includes("<tr>") ||
+                      messageContent.includes("<th>")
+                    ) {
+                      // HTML이 포함된 데이터는 그대로 innerHTML로 삽입
+                      botMessage.innerHTML = messageContent;
+                    } else {
+                      // 마크다운 처리
+                      botMessage.innerHTML = marked(messageContent);
+                    }
+                    console.log(marked(messageContent));
+                    chatBox.appendChild(ansImg);
+                    chatBox.appendChild(botMessage);
+
+                    // Scroll to the bottom of the chat box
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                  } else if (xhr.status === 0) {
+                    console.log("답변 가져오기 중지함");
+                    messageInput.disabled = false;
+                    messageInput.value = "";
+                    sendBtn.innerHTML =
+                      '<i class="fa-solid fa-magnifying-glass"></i>';
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                  } else {
+                    alert("Error: " + xhr.status);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                  }
+                }
+              };
+              xhr.open("POST", "/chat", true);
+              xhr.setRequestHeader("Content-Type", "application/json");
+              xhr.send(JSON.stringify({ message: message }));
+            }
+          </script>
+          <script>
+            window.addEventListener("resize", checkScroll);
+            window.addEventListener("scroll", checkScroll);
+
+            function checkScroll() {
+              const scrollToBottomBtn =
+                document.getElementById("scrollToBottomBtn");
+
+              // 스크롤 높이와 현재 스크롤 위치를 비교
+              if (document.documentElement.scrollHeight > window.innerHeight) {
+                scrollToBottomBtn.style.display = "block";
+              } else {
+                scrollToBottomBtn.style.display = "none";
+              }
+            }
+
+            // 화살표 버튼 클릭 시 최하단으로 스크롤
+            document
+              .getElementById("scrollToBottomBtn")
+              .addEventListener("click", function () {
+                window.scrollTo({
+                  top: document.documentElement.scrollHeight,
+                  behavior: "smooth",
+                });
+              });
+          </script>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+```
